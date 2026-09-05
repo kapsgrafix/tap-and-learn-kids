@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/audio_service.dart';
+import '../services/image_precache_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/mascot_widget.dart';
 import '../widgets/primary_button.dart';
@@ -14,6 +15,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _muted = false;
+  bool _imagesPrecached = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Kick off decoding every bundled illustration once, right when the
+    // app opens, so later screens never show a pop-in/blank flash while a
+    // picture loads for the first time. Purely local — no network involved.
+    if (!_imagesPrecached) {
+      _imagesPrecached = true;
+      precacheAllGameImages(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
