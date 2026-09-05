@@ -38,7 +38,7 @@ class AppHeader extends StatelessWidget {
               style: const TextStyle(
                 fontFamily: AppTheme.headingFontFamily,
                 fontSize: 26,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
               ),
             ),
