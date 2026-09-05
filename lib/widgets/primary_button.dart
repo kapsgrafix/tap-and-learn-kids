@@ -13,7 +13,7 @@ class PrimaryButton extends StatefulWidget {
     required this.label,
     required this.onPressed,
     this.icon,
-    this.color = AppColors.warmOrange,
+    this.color = AppColors.brandTeal,
   });
 
   @override
@@ -50,15 +50,16 @@ class _PrimaryButtonState extends State<PrimaryButton> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.icon != null) ...[
-                Icon(widget.icon, color: Colors.white, size: 26),
+                Icon(widget.icon, color: AppColors.textInverse, size: 26),
                 const SizedBox(width: 10),
               ],
               Text(
                 widget.label,
                 style: const TextStyle(
-                  color: Colors.white,
+                  fontFamily: AppTheme.headingFontFamily,
+                  color: AppColors.textInverse,
                   fontSize: 22,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

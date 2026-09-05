@@ -17,6 +17,8 @@ class _CategoryCardState extends State<CategoryCard> {
 
   @override
   Widget build(BuildContext context) {
+    final hasIcon = widget.category.iconAsset.isNotEmpty;
+
     return GestureDetector(
       onTapDown: (_) => setState(() => _scale = 0.95),
       onTapUp: (_) => setState(() => _scale = 1.0),
@@ -28,7 +30,7 @@ class _CategoryCardState extends State<CategoryCard> {
         child: Container(
           decoration: BoxDecoration(
             color: widget.category.color,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+            borderRadius: BorderRadius.circular(AppTheme.categoryCardRadius),
             boxShadow: [
               BoxShadow(
                 color: widget.category.color.withOpacity(0.45),
@@ -40,14 +42,21 @@ class _CategoryCardState extends State<CategoryCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.category.emojiIcon, style: const TextStyle(fontSize: 48)),
-              const SizedBox(height: 8),
+              SizedBox(
+                width: 56,
+                height: 56,
+                child: hasIcon
+                    ? Image.asset(widget.category.iconAsset, fit: BoxFit.contain)
+                    : const Icon(Icons.palette_rounded, color: Colors.white, size: 48),
+              ),
+              const SizedBox(height: 10),
               Text(
                 widget.category.name,
                 style: const TextStyle(
-                  color: Colors.white,
+                  fontFamily: AppTheme.headingFontFamily,
+                  color: AppColors.textInverse,
                   fontSize: 20,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],

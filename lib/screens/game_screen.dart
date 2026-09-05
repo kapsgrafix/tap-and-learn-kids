@@ -8,7 +8,7 @@ import '../widgets/option_card.dart';
 import '../widgets/progress_dots.dart';
 import 'result_screen.dart';
 
-const int questionsPerRound = 10;
+const int questionsPerRound = 8;
 
 class _Question {
   final GameItem correct;
@@ -125,7 +125,7 @@ class _GameScreenState extends State<GameScreen> {
     final correct = question.correct;
 
     return Scaffold(
-      backgroundColor: AppColors.cream,
+      backgroundColor: AppColors.bgYellow,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -135,11 +135,15 @@ class _GameScreenState extends State<GameScreen> {
                 children: [
                   IconButton(
                     iconSize: 28,
-                    icon: const Icon(Icons.home_rounded, color: AppColors.inkText),
+                    icon: const Icon(Icons.home_rounded, color: AppColors.textPrimary),
                     onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
                   ),
                   Expanded(
-                    child: ProgressDots(total: _questions.length, currentIndex: _currentIndex),
+                    child: ProgressDots(
+                      total: _questions.length,
+                      currentIndex: _currentIndex,
+                      activeColor: widget.category.color,
+                    ),
                   ),
                   const SizedBox(width: 28), // balances the home icon
                 ],
@@ -151,7 +155,7 @@ class _GameScreenState extends State<GameScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
                   decoration: BoxDecoration(
                     color: widget.category.color,
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(AppTheme.promptCardRadius),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -159,13 +163,14 @@ class _GameScreenState extends State<GameScreen> {
                       Text(
                         correct.label,
                         style: const TextStyle(
+                          fontFamily: AppTheme.headingFontFamily,
                           fontSize: 30,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textInverse,
                         ),
                       ),
                       const SizedBox(width: 10),
-                      const Icon(Icons.volume_up_rounded, color: Colors.white, size: 28),
+                      const Icon(Icons.volume_up_rounded, color: AppColors.textInverse, size: 28),
                     ],
                   ),
                 ),

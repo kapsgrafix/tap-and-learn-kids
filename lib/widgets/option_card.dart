@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/game_item.dart';
 import '../theme/app_theme.dart';
-import 'shape_painter.dart';
 
 enum OptionState { idle, correct, wrong, disabled }
 
 /// One of the four tappable answer cards in the 2x2 grid. Shows only the
-/// item's picture/shape/color (never its written label) so the child has
+/// item's illustrated artwork (never its written label) so the child has
 /// to actually recognize it from the word + sound prompt above.
 class OptionCard extends StatelessWidget {
   final GameItem item;
@@ -27,11 +26,12 @@ class OptionCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
         child: Stack(
+          clipBehavior: Clip.none,
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.bgCard,
                 borderRadius: BorderRadius.circular(AppTheme.cardRadius),
                 border: Border.all(
                   color: isCorrectTapped
@@ -41,13 +41,22 @@ class OptionCard extends StatelessWidget {
                           : Colors.transparent,
                   width: 5,
                 ),
-                boxShadow: const [
-                  BoxShadow(color: AppColors.cardShadow, blurRadius: 10, offset: Offset(0, 4)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
                 ],
               ),
               child: AspectRatio(
                 aspectRatio: 1,
-                child: Center(child: _buildVisual()),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Image.asset(item.imageAsset, fit: BoxFit.contain),
+                  ),
+                ),
               ),
             ),
             if (isCorrectTapped) _buildBadge(Icons.check_rounded, AppColors.correctGreen),
@@ -56,25 +65,6 @@ class OptionCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildVisual() {
-    switch (item.visualKind) {
-      case VisualKind.emoji:
-        return Text(item.emoji!, style: const TextStyle(fontSize: 64));
-      case VisualKind.shape:
-        return ShapeIcon(shape: item.shape!, color: item.color!, size: 84);
-      case VisualKind.color:
-        return Container(
-          width: 84,
-          height: 84,
-          decoration: BoxDecoration(
-            color: item.color,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.black12, width: 2),
-          ),
-        );
-    }
   }
 
   Widget _buildBadge(IconData icon, Color color) {
