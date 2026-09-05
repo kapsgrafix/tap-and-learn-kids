@@ -52,12 +52,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const Text(
-                    'Kids',
+                    'Smart Kids',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: AppTheme.headingFontFamily,
                       fontSize: 28,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
                       color: AppColors.brandCoral,
                     ),
                   ),

@@ -59,7 +59,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                   fontFamily: AppTheme.headingFontFamily,
                   color: AppColors.textInverse,
                   fontSize: 22,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
