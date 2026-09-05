@@ -132,6 +132,7 @@ class _GameScreenState extends State<GameScreen> {
               child: OptionCard(
                 item: items[i],
                 state: _stateFor(items[i], correct),
+                categoryColor: widget.category.color,
                 onTap: _stateFor(items[i], correct) == OptionState.idle
                     ? () => _onOptionTap(items[i])
                     : null,
