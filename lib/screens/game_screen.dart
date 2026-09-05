@@ -4,8 +4,10 @@ import '../models/game_category.dart';
 import '../models/game_item.dart';
 import '../services/audio_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/app_header.dart';
 import '../widgets/option_card.dart';
 import '../widgets/progress_dots.dart';
+import '../widgets/sound_toggle_button.dart';
 import 'result_screen.dart';
 
 const int questionsPerRound = 8;
@@ -119,85 +121,108 @@ class _GameScreenState extends State<GameScreen> {
     return OptionState.idle;
   }
 
+  Widget _buildAnswerRow(List<GameItem> items, GameItem correct) {
+    return Row(
+      children: [
+        for (int i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(width: 16),
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 163 / 155,
+              child: OptionCard(
+                item: items[i],
+                state: _stateFor(items[i], correct),
+                onTap: _stateFor(items[i], correct) == OptionState.idle
+                    ? () => _onOptionTap(items[i])
+                    : null,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final question = _questions[_currentIndex];
     final correct = question.correct;
+    final options = question.options;
 
     return Scaffold(
       backgroundColor: AppColors.bgYellow,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          child: Column(
-            children: [
-              Row(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+              child: Column(
                 children: [
-                  IconButton(
-                    iconSize: 28,
-                    icon: const Icon(Icons.home_rounded, color: AppColors.textPrimary),
-                    onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
+                  AppHeader(
+                    title: widget.category.name,
+                    onBack: () => Navigator.of(context).pop(),
                   ),
                   Expanded(
-                    child: ProgressDots(
-                      total: _questions.length,
-                      currentIndex: _currentIndex,
-                      activeColor: widget.category.color,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // PromptCard: the word + tap-to-hear-again sound icon.
+                          GestureDetector(
+                            onTap: _playCurrentPrompt,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.fromLTRB(28, 22, 24, 22),
+                              decoration: BoxDecoration(
+                                color: widget.category.color,
+                                borderRadius: BorderRadius.circular(AppTheme.promptCardRadius),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: widget.category.color.withOpacity(0.3),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    correct.label,
+                                    style: const TextStyle(
+                                      fontFamily: AppTheme.headingFontFamily,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.textInverse,
+                                    ),
+                                  ),
+                                  const Icon(Icons.volume_up_rounded, color: AppColors.textInverse, size: 26),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          // AnswerGrid: 2x2 illustrated option cards.
+                          _buildAnswerRow(options.sublist(0, 2), correct),
+                          const SizedBox(height: 16),
+                          _buildAnswerRow(options.sublist(2, 4), correct),
+                          const SizedBox(height: 28),
+                          // PaginationRow.
+                          ProgressDots(
+                            total: _questions.length,
+                            currentIndex: _currentIndex,
+                            activeColor: widget.category.color,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 28), // balances the home icon
                 ],
               ),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: _playCurrentPrompt,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: widget.category.color,
-                    borderRadius: BorderRadius.circular(AppTheme.promptCardRadius),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        correct.label,
-                        style: const TextStyle(
-                          fontFamily: AppTheme.headingFontFamily,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textInverse,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      const Icon(Icons.volume_up_rounded, color: AppColors.textInverse, size: 28),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 28),
-              Expanded(
-                child: GridView.builder(
-                  itemCount: question.options.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    final item = question.options[index];
-                    final state = _stateFor(item, correct);
-                    return OptionCard(
-                      item: item,
-                      state: state,
-                      onTap: state == OptionState.idle ? () => _onOptionTap(item) : null,
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+            // Figma's BottomBar sound toggle: bottom-right on every screen.
+            const SoundToggleButton(),
+          ],
         ),
       ),
     );

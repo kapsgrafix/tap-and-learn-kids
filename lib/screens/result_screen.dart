@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import '../widgets/confetti_widget.dart';
 import '../widgets/mascot_widget.dart';
 import '../widgets/primary_button.dart';
+import '../widgets/sound_toggle_button.dart';
 import 'game_screen.dart';
 
 class ResultScreen extends StatefulWidget {
@@ -88,6 +89,8 @@ class _ResultScreenState extends State<ResultScreen> {
                 ],
               ),
             ),
+            // Figma's BottomBar sound toggle: bottom-right on every screen.
+            const SoundToggleButton(),
           ],
         ),
       ),

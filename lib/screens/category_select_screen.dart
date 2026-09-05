@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../data/categories_data.dart';
 import '../theme/app_theme.dart';
+import '../widgets/app_header.dart';
 import '../widgets/category_card.dart';
+import '../widgets/sound_toggle_button.dart';
 import 'game_screen.dart';
 
 class CategorySelectScreen extends StatelessWidget {
@@ -12,55 +14,46 @@ class CategorySelectScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.bgYellow,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    iconSize: 30,
-                    icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
-                    onPressed: () => Navigator.of(context).pop(),
+                  AppHeader(
+                    title: 'Choose to Play!',
+                    onBack: () => Navigator.of(context).pop(),
                   ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    'Choose to Play!',
-                    style: TextStyle(
-                      fontFamily: AppTheme.headingFontFamily,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: GridView.builder(
+                      itemCount: gameCategories.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        childAspectRatio: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        final category = gameCategories[index];
+                        return CategoryCard(
+                          category: category,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => GameScreen(category: category)),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: GridView.builder(
-                  itemCount: gameCategories.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 18,
-                    crossAxisSpacing: 18,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    final category = gameCategories[index];
-                    return CategoryCard(
-                      category: category,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => GameScreen(category: category)),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+            // Figma's BottomBar sound toggle: bottom-right on every screen.
+            const SoundToggleButton(),
+          ],
         ),
       ),
     );

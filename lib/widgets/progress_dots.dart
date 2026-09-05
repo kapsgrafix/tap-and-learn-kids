@@ -24,7 +24,7 @@ class ProgressDots extends StatelessWidget {
         final isActive = i == currentIndex;
         return AnimatedContainer(
           duration: const Duration(milliseconds: 250),
-          margin: const EdgeInsets.symmetric(horizontal: 3),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
           width: isActive ? 22 : 8,
           height: 8,
           decoration: BoxDecoration(

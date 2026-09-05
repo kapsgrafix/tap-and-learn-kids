@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../services/audio_service.dart';
 import '../services/image_precache_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/mascot_widget.dart';
 import '../widgets/primary_button.dart';
+import '../widgets/sound_toggle_button.dart';
 import 'category_select_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool _muted = false;
   bool _imagesPrecached = false;
 
   @override
@@ -76,23 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            Positioned(
-              top: 8,
-              right: 8,
-              child: IconButton(
-                iconSize: 30,
-                icon: Icon(
-                  _muted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-                  color: AppColors.textPrimary,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _muted = !_muted;
-                    AudioService.instance.setMuted(_muted);
-                  });
-                },
-              ),
-            ),
+            // Figma's BottomBar sound toggle: bottom-right on every screen.
+            const SoundToggleButton(),
           ],
         ),
       ),
