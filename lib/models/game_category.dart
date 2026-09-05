@@ -5,14 +5,14 @@ import 'game_item.dart';
 class GameCategory {
   final String id;
   final String name;
-  final String emojiIcon;
+  final String iconAsset;
   final Color color;
   final List<GameItem> items;
 
   const GameCategory({
     required this.id,
     required this.name,
-    required this.emojiIcon,
+    required this.iconAsset,
     required this.color,
     required this.items,
   });

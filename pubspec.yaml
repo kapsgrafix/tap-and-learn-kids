@@ -22,7 +22,12 @@ flutter:
   assets:
     - assets/audio/words/
     - assets/audio/sfx/
-    - assets/images/
+    - assets/images/fruits/
+    - assets/images/animals/
+    - assets/images/vehicles/
+    - assets/images/shapes/
+    - assets/images/colors/
+    - assets/images/mascots/
   fonts:
     - family: Baloo2
       fonts:

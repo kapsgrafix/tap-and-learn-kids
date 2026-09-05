@@ -35,7 +35,7 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.cream,
+      backgroundColor: AppColors.bgYellow,
       body: SafeArea(
         child: Stack(
           children: [
@@ -44,31 +44,32 @@ class _ResultScreenState extends State<ResultScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const MascotWidget(size: 200),
+                  const MascotWidget(size: 200, wellDone: true),
                   const SizedBox(height: 12),
                   const Text(
                     'Well Done!',
                     style: TextStyle(
+                      fontFamily: AppTheme.headingFontFamily,
                       fontSize: 40,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.inkText,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'You got ${widget.perfectCount} out of ${widget.total} right away! 🌟',
+                    'You got ${widget.perfectCount} out of ${widget.total} right!',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.inkText,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 36),
                   PrimaryButton(
                     label: 'Play Again',
                     icon: Icons.refresh_rounded,
-                    color: AppColors.grassGreen,
+                    color: AppColors.categoryShapes,
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => GameScreen(category: widget.category)),
@@ -79,7 +80,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   PrimaryButton(
                     label: 'Home',
                     icon: Icons.home_rounded,
-                    color: AppColors.skyBlueDark,
+                    color: AppColors.brandTeal,
                     onPressed: () {
                       Navigator.of(context).popUntil((r) => r.isFirst);
                     },

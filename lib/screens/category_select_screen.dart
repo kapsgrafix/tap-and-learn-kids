@@ -10,6 +10,7 @@ class CategorySelectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.bgYellow,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -20,16 +21,17 @@ class CategorySelectScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     iconSize: 30,
-                    icon: const Icon(Icons.arrow_back_rounded, color: AppColors.inkText),
+                    icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   const SizedBox(width: 4),
                   const Text(
                     'Choose to Play!',
                     style: TextStyle(
+                      fontFamily: AppTheme.headingFontFamily,
                       fontSize: 26,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.inkText,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                 ],

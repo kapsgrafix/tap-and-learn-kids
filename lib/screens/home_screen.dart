@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.bgYellow,
       body: SafeArea(
         child: Stack(
           children: [
@@ -31,25 +32,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Tap & Learn',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontFamily: AppTheme.headingFontFamily,
                       fontSize: 40,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.inkText,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const Text(
                     'Kids',
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                      fontFamily: AppTheme.headingFontFamily,
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.warmOrange,
+                      color: AppColors.brandCoral,
                     ),
                   ),
                   const SizedBox(height: 36),
                   PrimaryButton(
                     label: "Let's Play!",
                     icon: Icons.play_arrow_rounded,
-                    color: AppColors.grassGreen,
+                    color: AppColors.categoryShapes,
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => const CategorySelectScreen()),
@@ -66,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 iconSize: 30,
                 icon: Icon(
                   _muted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-                  color: AppColors.inkText,
+                  color: AppColors.textPrimary,
                 ),
                 onPressed: () {
                   setState(() {
