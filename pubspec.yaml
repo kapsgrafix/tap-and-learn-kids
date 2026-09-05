@@ -49,3 +49,13 @@ flutter:
           weight: 700
         - asset: assets/fonts/Nunito-Variable.ttf
           weight: 800
+    # A static (non-variable) ExtraBold instance baked out of Baloo2's
+    # wght axis with fonttools. Some Android renderers don't apply a
+    # variable font's weight axis reliably at runtime, so the "bold"
+    # named-instance entries above can render visually thin on-device.
+    # This file has no variable axis at all — it IS the bold glyphs —
+    # so it always renders heavy regardless of renderer quirks.
+    - family: BalooBold
+      fonts:
+        - asset: assets/fonts/Baloo2-ExtraBold-Static.ttf
+          weight: 800

@@ -50,7 +50,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   const Text(
                     'Well Done!',
                     style: TextStyle(
-                      fontFamily: AppTheme.headingFontFamily,
+                      fontFamily: AppTheme.boldHeadingFontFamily,
                       fontSize: 40,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
@@ -71,6 +71,8 @@ class _ResultScreenState extends State<ResultScreen> {
                     label: 'Play Again',
                     icon: Icons.refresh_rounded,
                     color: AppColors.categoryShapes,
+                    fontFamily: AppTheme.boldHeadingFontFamily,
+                    breathing: true,
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => GameScreen(category: widget.category)),

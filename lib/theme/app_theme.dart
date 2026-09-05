@@ -57,6 +57,16 @@ class AppTheme {
   /// Baloo 2 is used for headings, titles, and category labels.
   static const headingFontFamily = 'Baloo2';
 
+  /// A static (always-heavy) ExtraBold instance of Baloo 2, for the
+  /// handful of spots that need to read unmistakably bold: the Home
+  /// title, header page titles, the Well Done heading, and the
+  /// Let's Play!/Play Again CTA labels. (Google discontinued the
+  /// original standalone "Baloo" typeface — it's no longer published
+  /// anywhere — so this static instance is the reliable substitute:
+  /// unlike the variable Baloo2 file above, it has no weight axis for
+  /// a renderer to under-apply, so it always renders heavy.)
+  static const boldHeadingFontFamily = 'BalooBold';
+
   /// Nunito is used for body text and button labels.
   static const bodyFontFamily = 'Nunito';
 

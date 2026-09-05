@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Smart Kids',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: AppTheme.headingFontFamily,
+                      fontFamily: AppTheme.boldHeadingFontFamily,
                       fontSize: 42,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
@@ -67,6 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     label: "Let's Play!",
                     icon: Icons.play_arrow_rounded,
                     color: AppColors.categoryShapes,
+                    fontFamily: AppTheme.boldHeadingFontFamily,
+                    breathing: true,
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => const CategorySelectScreen()),

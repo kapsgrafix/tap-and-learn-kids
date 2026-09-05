@@ -36,7 +36,7 @@ class AppHeader extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontFamily: AppTheme.headingFontFamily,
+                fontFamily: AppTheme.boldHeadingFontFamily,
                 fontSize: 26,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
