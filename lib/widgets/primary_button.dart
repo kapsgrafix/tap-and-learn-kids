@@ -50,15 +50,15 @@ class _PrimaryButtonState extends State<PrimaryButton> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.icon != null) ...[
-                Icon(widget.icon, color: AppColors.textInverse, size: 26),
-                const SizedBox(width: 10),
+                Icon(widget.icon, color: AppColors.textInverse, size: 24),
+                const SizedBox(width: 12),
               ],
               Text(
                 widget.label,
                 style: const TextStyle(
-                  fontFamily: AppTheme.headingFontFamily,
+                  fontFamily: AppTheme.bodyFontFamily,
                   color: AppColors.textInverse,
-                  fontSize: 22,
+                  fontSize: 24,
                   fontWeight: FontWeight.w800,
                 ),
               ),

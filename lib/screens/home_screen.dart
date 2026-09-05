@@ -40,28 +40,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const MascotWidget(size: 240),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Tap & Learn',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: AppTheme.headingFontFamily,
-                      fontSize: 40,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
+                  const SizedBox(height: 32),
                   const Text(
                     'Smart Kids',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: AppTheme.headingFontFamily,
-                      fontSize: 28,
+                      fontSize: 42,
                       fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Tap, Learn & Play!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: AppTheme.headingFontFamily,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.brandCoral,
                     ),
                   ),
-                  const SizedBox(height: 36),
+                  const SizedBox(height: 32),
                   PrimaryButton(
                     label: "Let's Play!",
                     icon: Icons.play_arrow_rounded,
