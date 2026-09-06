@@ -24,7 +24,7 @@ class TapAndLearnApp extends StatelessWidget {
       AudioService.instance.startBackgroundMusic();
     });
     return MaterialApp(
-      title: 'Tap & Learn Kids',
+      title: 'Nimble Kids',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
       home: const HomeScreen(),

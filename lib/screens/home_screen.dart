@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const MascotWidget(size: 240),
                   const SizedBox(height: 32),
                   const Text(
-                    'Smart Kids',
+                    'Nimble Kids',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: AppTheme.boldHeadingFontFamily,

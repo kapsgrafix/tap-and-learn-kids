@@ -163,37 +163,6 @@ def gen_tap_sfx():
     save_wav_then_mp3(audio, os.path.join(SFX_DIR, "tap"))
 
 
-def gen_clap_sfx():
-    # A short round of applause for the results screen, built from
-    # filtered noise bursts (individual "claps") scattered over ~1.1s.
-    from scipy.signal import butter, lfilter
-
-    rng = np.random.default_rng(7)
-    total_dur = 1.15
-    n_total = int(SR * total_dur)
-    audio = np.zeros(n_total)
-
-    def one_clap(duration, vol):
-        n = int(SR * duration)
-        noise = rng.uniform(-1, 1, n)
-        b, a = butter(2, [900 / (SR / 2), 4200 / (SR / 2)], btype="band")
-        filtered = lfilter(b, a, noise)
-        env = np.exp(-np.linspace(0, 14, n))
-        return filtered * env * vol
-
-    n_claps = 20
-    times = np.sort(rng.uniform(0, total_dur - 0.12, n_claps))
-    for t in times:
-        burst = one_clap(0.08 + rng.uniform(0, 0.03), 0.5 + rng.uniform(-0.1, 0.2))
-        start = int(t * SR)
-        end = min(start + len(burst), n_total)
-        audio[start:end] += burst[: end - start]
-
-    fade_n = int(SR * 0.18)
-    audio[-fade_n:] *= np.linspace(1, 0, fade_n)
-    save_wav_then_mp3(audio, os.path.join(SFX_DIR, "clap"))
-
-
 def _pluck(freq, duration, vol=0.3, decay=6.0):
     """A soft, xylophone-like plucked note: quick attack, exponential decay,
     with a touch of the octave harmonic for warmth rather than a bare tone."""
@@ -205,6 +174,30 @@ def _pluck(freq, duration, vol=0.3, decay=6.0):
     if attack_n > 0:
         env[:attack_n] *= np.linspace(0, 1, attack_n)
     return wave * env * vol
+
+
+def gen_cheer_sfx():
+    # A bright, musical "ta-da!" for the results screen - a warmer, more
+    # positive alternative to a literal round of applause: a quick rising
+    # run landing on a ringing major chord.
+    notes = [523.25, 659.25, 783.99, 1046.50]  # C5, E5, G5, C6
+    durs = [0.11, 0.11, 0.11, 0.20]
+    parts = []
+    for f, d in zip(notes, durs):
+        parts.append(_pluck(f, d, vol=0.5, decay=5.0))
+        parts.append(np.zeros(int(SR * 0.01)))
+
+    chord_dur = 0.7
+    chord = (
+        _pluck(523.25, chord_dur, vol=0.32, decay=2.0)
+        + _pluck(659.25, chord_dur, vol=0.28, decay=2.0)
+        + _pluck(783.99, chord_dur, vol=0.24, decay=2.0)
+        + _pluck(1046.50, chord_dur, vol=0.18, decay=2.0)
+    )
+    parts.append(chord)
+
+    audio = np.concatenate(parts)
+    save_wav_then_mp3(audio, os.path.join(SFX_DIR, "cheer"))
 
 
 def gen_bg_music():
@@ -220,12 +213,12 @@ def gen_bg_music():
         C4, D4, E4, G4, E4, D4, C4, G4,
         A4, G4, E4, D4, C4, D4, E4, C4,
     ]
-    parts = [_pluck(f, step, vol=0.30 if i % 4 != 2 else 0.24) for i, f in enumerate(pattern)]
+    parts = [_pluck(f, step, vol=0.5 if i % 4 != 2 else 0.4) for i, f in enumerate(pattern)]
     melody = np.concatenate(parts)
 
-    # A very soft sustained root note underneath for warmth.
+    # A soft sustained root note underneath for warmth.
     t = np.linspace(0, len(melody) / SR, len(melody), endpoint=False)
-    pad = 0.05 * np.sin(2 * np.pi * (C4 / 2) * t)
+    pad = 0.09 * np.sin(2 * np.pi * (C4 / 2) * t)
     fade_n = int(SR * 0.4)
     pad[:fade_n] *= np.linspace(0, 1, fade_n)
     pad[-fade_n:] *= np.linspace(1, 0, fade_n)
@@ -237,7 +230,7 @@ def gen_bg_music():
     audio[:edge_n] *= np.linspace(0, 1, edge_n)
     audio[-edge_n:] *= np.linspace(1, 0, edge_n)
 
-    audio *= 0.55  # headroom - stays quiet under everything else in the mix
+    audio *= 0.85  # loud enough to actually register as a music bed
     save_wav_then_mp3(audio, os.path.join(MUSIC_DIR, "bg_loop"))
 
 
@@ -248,6 +241,6 @@ if __name__ == "__main__":
     gen_wrong_sfx()
     gen_win_sfx()
     gen_tap_sfx()
-    gen_clap_sfx()
+    gen_cheer_sfx()
     gen_bg_music()
     print("All audio assets generated.")

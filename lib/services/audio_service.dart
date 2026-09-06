@@ -18,10 +18,9 @@ class AudioService {
 
   bool _musicStarted = false;
 
-  // Kept low on purpose: this plays continuously under word narration and
-  // sound effects, so it must always read as a soft background bed rather
-  // than something competing for the child's attention.
-  static const double _musicVolume = 0.16;
+  // Loud enough to actually be heard as a music bed, but still well under
+  // the narration/sfx channels so it never competes with them.
+  static const double _musicVolume = 0.4;
 
   void setMuted(bool value) {
     _muted = value;
@@ -70,11 +69,14 @@ class AudioService {
     } catch (_) {}
   }
 
+  /// Stops narration and sound effects — the two "one-shot" channels.
+  /// Deliberately leaves the looping background music bed alone: it should
+  /// keep playing continuously across every screen for as long as the app
+  /// is open, not restart (or worse, stay silent) every time a screen that
+  /// calls this on the way out gets popped, e.g. leaving the quiz.
   Future<void> stopAll() async {
     await _voicePlayer.stop();
     await _sfxPlayer.stop();
-    await _musicPlayer.stop();
-    _musicStarted = false;
   }
 
   String _stripAssetsPrefix(String path) {
