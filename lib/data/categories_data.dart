@@ -60,9 +60,7 @@ final List<GameCategory> gameCategories = [
   GameCategory(
     id: 'colors',
     name: 'Colors',
-    // No dedicated palette icon was exported from Figma yet — CategoryCard
-    // falls back to a Material icon whenever iconAsset is empty.
-    iconAsset: '',
+    iconAsset: 'assets/images/category_icons/colors.webp',
     color: AppColors.categoryColors,
     items: [
       _item('color_black', 'Black', 'assets/images/colors/black.webp'),

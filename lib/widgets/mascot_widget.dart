@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// The app's mascot artwork exported from Figma. Falls back gracefully if
-/// the image asset is ever missing (e.g. mid-refactor).
+/// The app's mascot/branding artwork. Falls back gracefully if the image
+/// asset is ever missing (e.g. mid-refactor).
 class MascotWidget extends StatelessWidget {
   final double size;
 
-  /// Which mascot pose to show. Defaults to the cheerful owl used on the
-  /// Home screen; pass [wellDone] for the "Well Done!" screen's smiley pose.
+  /// Which pose to show. Defaults to the Home screen's logo; pass
+  /// [wellDone] for the "Well Done!" screen's celebratory emoji.
   final bool wellDone;
 
   const MascotWidget({super.key, this.size = 220, this.wellDone = false});
@@ -14,8 +14,8 @@ class MascotWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final asset = wellDone
-        ? 'assets/images/mascots/well_done_smiley.webp'
-        : 'assets/images/mascots/home_owl.webp';
+        ? 'assets/images/mascots/result_emoji.webp'
+        : 'assets/images/mascots/home_logo.webp';
     return Image.asset(
       asset,
       width: size,

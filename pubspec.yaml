@@ -28,6 +28,7 @@ flutter:
     - assets/images/shapes/
     - assets/images/colors/
     - assets/images/mascots/
+    - assets/images/category_icons/
   fonts:
     - family: Baloo2
       fonts:

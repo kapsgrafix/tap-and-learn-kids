@@ -12,8 +12,8 @@ import '../data/categories_data.dart';
 /// visited.
 Future<void> precacheAllGameImages(BuildContext context) async {
   final paths = <String>{
-    'assets/images/mascots/home_owl.webp',
-    'assets/images/mascots/well_done_smiley.webp',
+    'assets/images/mascots/home_logo.webp',
+    'assets/images/mascots/result_emoji.webp',
   };
   for (final category in gameCategories) {
     if (category.iconAsset.isNotEmpty) paths.add(category.iconAsset);
