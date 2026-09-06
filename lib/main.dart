@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/home_screen.dart';
+import 'services/audio_service.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -17,6 +18,11 @@ class TapAndLearnApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A soft, low-volume music bed for as long as the app is open, so it's
+    // already playing under the very first screen the child sees.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AudioService.instance.startBackgroundMusic();
+    });
     return MaterialApp(
       title: 'Tap & Learn Kids',
       debugShowCheckedModeBanner: false,

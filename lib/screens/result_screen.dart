@@ -30,6 +30,10 @@ class _ResultScreenState extends State<ResultScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AudioService.instance.playSfx('win_fanfare.mp3');
+      // A little round of applause right as the fanfare's last note lands.
+      Future.delayed(const Duration(milliseconds: 700), () {
+        if (mounted) AudioService.instance.playSfx('clap.mp3');
+      });
     });
   }
 

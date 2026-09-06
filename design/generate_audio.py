@@ -18,8 +18,10 @@ from scipy.io import wavfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORDS_DIR = os.path.join(ROOT, "assets", "audio", "words")
 SFX_DIR = os.path.join(ROOT, "assets", "audio", "sfx")
+MUSIC_DIR = os.path.join(ROOT, "assets", "audio", "music")
 os.makedirs(WORDS_DIR, exist_ok=True)
 os.makedirs(SFX_DIR, exist_ok=True)
+os.makedirs(MUSIC_DIR, exist_ok=True)
 
 VOICE = "en-us+f3"
 SPEED = 140   # words per minute - slower & clearer for young kids
@@ -161,6 +163,84 @@ def gen_tap_sfx():
     save_wav_then_mp3(audio, os.path.join(SFX_DIR, "tap"))
 
 
+def gen_clap_sfx():
+    # A short round of applause for the results screen, built from
+    # filtered noise bursts (individual "claps") scattered over ~1.1s.
+    from scipy.signal import butter, lfilter
+
+    rng = np.random.default_rng(7)
+    total_dur = 1.15
+    n_total = int(SR * total_dur)
+    audio = np.zeros(n_total)
+
+    def one_clap(duration, vol):
+        n = int(SR * duration)
+        noise = rng.uniform(-1, 1, n)
+        b, a = butter(2, [900 / (SR / 2), 4200 / (SR / 2)], btype="band")
+        filtered = lfilter(b, a, noise)
+        env = np.exp(-np.linspace(0, 14, n))
+        return filtered * env * vol
+
+    n_claps = 20
+    times = np.sort(rng.uniform(0, total_dur - 0.12, n_claps))
+    for t in times:
+        burst = one_clap(0.08 + rng.uniform(0, 0.03), 0.5 + rng.uniform(-0.1, 0.2))
+        start = int(t * SR)
+        end = min(start + len(burst), n_total)
+        audio[start:end] += burst[: end - start]
+
+    fade_n = int(SR * 0.18)
+    audio[-fade_n:] *= np.linspace(1, 0, fade_n)
+    save_wav_then_mp3(audio, os.path.join(SFX_DIR, "clap"))
+
+
+def _pluck(freq, duration, vol=0.3, decay=6.0):
+    """A soft, xylophone-like plucked note: quick attack, exponential decay,
+    with a touch of the octave harmonic for warmth rather than a bare tone."""
+    n = int(SR * duration)
+    t = np.linspace(0, duration, n, endpoint=False)
+    wave = np.sin(2 * np.pi * freq * t) + 0.25 * np.sin(2 * np.pi * freq * 2 * t)
+    env = np.exp(-decay * t)
+    attack_n = int(SR * 0.004)
+    if attack_n > 0:
+        env[:attack_n] *= np.linspace(0, 1, attack_n)
+    return wave * env * vol
+
+
+def gen_bg_music():
+    """A gentle, seamlessly-loopable pentatonic arpeggio meant to sit very
+    quietly under narration and sound effects for the whole time the app is
+    open - never a foreground element, just a soft bed of sound."""
+    C4, D4, E4, G4, A4 = 261.63, 293.66, 329.63, 392.00, 440.00
+    C5 = 523.25
+    step = 0.30
+    pattern = [
+        C4, E4, G4, C5, G4, E4, D4, G4,
+        C4, E4, A4, C5, A4, E4, D4, C4,
+        C4, D4, E4, G4, E4, D4, C4, G4,
+        A4, G4, E4, D4, C4, D4, E4, C4,
+    ]
+    parts = [_pluck(f, step, vol=0.30 if i % 4 != 2 else 0.24) for i, f in enumerate(pattern)]
+    melody = np.concatenate(parts)
+
+    # A very soft sustained root note underneath for warmth.
+    t = np.linspace(0, len(melody) / SR, len(melody), endpoint=False)
+    pad = 0.05 * np.sin(2 * np.pi * (C4 / 2) * t)
+    fade_n = int(SR * 0.4)
+    pad[:fade_n] *= np.linspace(0, 1, fade_n)
+    pad[-fade_n:] *= np.linspace(1, 0, fade_n)
+
+    audio = melody + pad
+
+    # Fade the loop's very ends so repeating it never produces a click.
+    edge_n = int(SR * 0.05)
+    audio[:edge_n] *= np.linspace(0, 1, edge_n)
+    audio[-edge_n:] *= np.linspace(1, 0, edge_n)
+
+    audio *= 0.55  # headroom - stays quiet under everything else in the mix
+    save_wav_then_mp3(audio, os.path.join(MUSIC_DIR, "bg_loop"))
+
+
 if __name__ == "__main__":
     gen_words()
     gen_phrases()
@@ -168,4 +248,6 @@ if __name__ == "__main__":
     gen_wrong_sfx()
     gen_win_sfx()
     gen_tap_sfx()
+    gen_clap_sfx()
+    gen_bg_music()
     print("All audio assets generated.")

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/game_item.dart';
 import '../theme/app_theme.dart';
+import 'confetti_widget.dart';
 import 'pulsing_scale.dart';
 
 enum OptionState { idle, correct, wrong, disabled }
@@ -79,6 +80,7 @@ class OptionCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (isCorrectTapped) Positioned.fill(child: MiniConfettiBurst(trigger: isCorrectTapped)),
                 if (isCorrectTapped) _buildCorrectBadge(),
                 if (isWrongTapped) _buildWrongTag(),
               ],
@@ -91,11 +93,11 @@ class OptionCard extends StatelessWidget {
 
   Widget _buildCorrectBadge() {
     return Positioned(
-      top: -18,
-      right: -18,
+      top: -10,
+      right: -10,
       child: Container(
-        width: 36,
-        height: 36,
+        width: 34,
+        height: 34,
         decoration: BoxDecoration(
           color: AppColors.correctGreen,
           shape: BoxShape.circle,

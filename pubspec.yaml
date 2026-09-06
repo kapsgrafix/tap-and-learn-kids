@@ -22,6 +22,7 @@ flutter:
   assets:
     - assets/audio/words/
     - assets/audio/sfx/
+    - assets/audio/music/
     - assets/images/fruits/
     - assets/images/animals/
     - assets/images/vehicles/
