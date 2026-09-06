@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/game_item.dart';
 import '../theme/app_theme.dart';
+import 'pulsing_scale.dart';
 
 enum OptionState { idle, correct, wrong, disabled }
 
@@ -12,7 +13,9 @@ enum OptionState { idle, correct, wrong, disabled }
 /// just a small, calm "Wrong" tag in the quiz's own category color,
 /// matching the Figma spec exactly. A correct tap gets a friendly green
 /// checkmark badge instead, and the other (un-tapped) cards fade slightly
-/// once an answer has been picked.
+/// once an answer has been picked. While a card is still tappable it
+/// breathes with a subtle pulse to invite a tap; the pulse stops the
+/// moment it's answered (correct, wrong, or faded out).
 class OptionCard extends StatelessWidget {
   final GameItem item;
   final OptionState state;
@@ -32,50 +35,54 @@ class OptionCard extends StatelessWidget {
     final isCorrectTapped = state == OptionState.correct;
     final isWrongTapped = state == OptionState.wrong;
     final isFaded = state == OptionState.disabled;
+    final isIdle = state == OptionState.idle;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedScale(
-        scale: isCorrectTapped ? 1.06 : 1.0,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        child: AnimatedOpacity(
-          opacity: isFaded ? 0.55 : 1.0,
+    return PulsingScale(
+      enabled: isIdle,
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedScale(
+          scale: isCorrectTapped ? 1.06 : 1.0,
           duration: const Duration(milliseconds: 200),
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                  color: AppColors.bgCard,
-                  borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                  border: Border.all(
-                    color: isCorrectTapped ? AppColors.correctGreen : Colors.transparent,
-                    width: 5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+          curve: Curves.easeOut,
+          child: AnimatedOpacity(
+            opacity: isFaded ? 0.55 : 1.0,
+            duration: const Duration(milliseconds: 200),
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  decoration: BoxDecoration(
+                    color: AppColors.bgCard,
+                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                    border: Border.all(
+                      color: isCorrectTapped ? AppColors.correctGreen : Colors.transparent,
+                      width: 5,
                     ),
-                  ],
-                ),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Image.asset(item.imageAsset, fit: BoxFit.contain),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Image.asset(item.imageAsset, fit: BoxFit.contain),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (isCorrectTapped) _buildCorrectBadge(),
-              if (isWrongTapped) _buildWrongTag(),
-            ],
+                if (isCorrectTapped) _buildCorrectBadge(),
+                if (isWrongTapped) _buildWrongTag(),
+              ],
+            ),
           ),
         ),
       ),
