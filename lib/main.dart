@@ -6,6 +6,14 @@ import 'theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // Every screen has a light (cream/yellow) background, so the status bar's
+  // clock/signal/battery icons need to render dark - left at the system
+  // default they render white and disappear against it.
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.light,
+  ));
   // Lock to portrait - the game grid and word prompt are designed for it.
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
