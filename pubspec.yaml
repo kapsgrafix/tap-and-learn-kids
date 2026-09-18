@@ -30,6 +30,7 @@ flutter:
     - assets/images/colors/
     - assets/images/mascots/
     - assets/images/category_icons/
+    - assets/images/home/
   fonts:
     - family: Baloo2
       fonts:

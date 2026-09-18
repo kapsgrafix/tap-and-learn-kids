@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import '../data/categories_data.dart';
+import '../models/game_mode.dart';
 import '../theme/app_theme.dart';
 import '../widgets/app_header.dart';
 import '../widgets/category_card.dart';
 import '../widgets/sound_toggle_button.dart';
 import 'game_screen.dart';
+import 'learn_screen.dart';
 
+/// Shared by both Home-screen activities — the mode decides the header
+/// title and what a category tap opens next.
 class CategorySelectScreen extends StatelessWidget {
-  const CategorySelectScreen({super.key});
+  final GameMode mode;
+
+  const CategorySelectScreen({super.key, required this.mode});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,7 @@ class CategorySelectScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppHeader(
-                    title: 'Choose to Play!',
+                    title: mode == GameMode.learn ? 'Choose to Learn!' : 'Choose to Play!',
                     onBack: () => Navigator.of(context).pop(),
                   ),
                   const SizedBox(height: 24),
@@ -41,7 +47,11 @@ class CategorySelectScreen extends StatelessWidget {
                           category: category,
                           onTap: () {
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => GameScreen(category: category)),
+                              MaterialPageRoute(
+                                builder: (_) => mode == GameMode.learn
+                                    ? LearnScreen(category: category)
+                                    : GameScreen(category: category),
+                              ),
                             );
                           },
                         );

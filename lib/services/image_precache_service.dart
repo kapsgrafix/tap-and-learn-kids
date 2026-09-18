@@ -12,8 +12,10 @@ import '../data/categories_data.dart';
 /// visited.
 Future<void> precacheAllGameImages(BuildContext context) async {
   final paths = <String>{
-    'assets/images/mascots/home_logo.webp',
+    'assets/images/mascots/nimble_logo.webp',
     'assets/images/mascots/result_emoji.webp',
+    'assets/images/home/learn_icon.webp',
+    'assets/images/home/guess_icon.webp',
   };
   for (final category in gameCategories) {
     if (category.iconAsset.isNotEmpty) paths.add(category.iconAsset);

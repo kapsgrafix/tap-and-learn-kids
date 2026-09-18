@@ -15,7 +15,7 @@ class MascotWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final asset = wellDone
         ? 'assets/images/mascots/result_emoji.webp'
-        : 'assets/images/mascots/home_logo.webp';
+        : 'assets/images/mascots/nimble_logo.webp';
     return Image.asset(
       asset,
       width: size,
