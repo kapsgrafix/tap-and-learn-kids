@@ -3,19 +3,12 @@
   - feedback sound effects (correct / wrong)
   - a couple of short encouragement / celebration phrases
 
-Everything is synthesized offline (espeak-ng driving the mbrola "us1"
-diphone voice for speech, numpy for tones) so it needs no network access
-and no licensed sound packs. These are meant as PLACEHOLDERS to make the
-game fully playable now; swap in professional child-friendly voice-over
-and sound design before a real Play Store launch.
-
-The narration voice is "mb-us1" (mbrola's American-English female diphone
-voice) rather than espeak-ng's own formant synthesis ("en-us+f3") - mbrola
-is built from real recorded speech segments, so it reads noticeably less
-robotic/synthetic, while espeak-ng still drives the words, timing and
-intonation on top of it.
+Everything is synthesized offline (espeak-ng for speech, numpy for tones)
+so it needs no network access and no licensed sound packs. These are
+meant as PLACEHOLDERS to make the game fully playable now; swap in
+professional child-friendly voice-over and sound design before a real
+Play Store launch.
 """
-import hashlib
 import os
 import re
 import subprocess
@@ -30,9 +23,9 @@ os.makedirs(WORDS_DIR, exist_ok=True)
 os.makedirs(SFX_DIR, exist_ok=True)
 os.makedirs(MUSIC_DIR, exist_ok=True)
 
-VOICE = "mb-us1"  # mbrola US-English female diphone voice - warmer, less robotic than pure formant synthesis
-SPEED = 132   # words per minute - slower & clearer for young kids
-PITCH = 60
+VOICE = "en-us+f3"
+SPEED = 140   # words per minute - slower & clearer for young kids
+PITCH = 58
 
 ALL_WORDS = {
     "fruits": ["Apple", "Banana", "Orange", "Grapes", "Watermelon", "Strawberry",
@@ -59,32 +52,15 @@ def slugify(word: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", word.lower()).strip("_")
 
 
-def _pitch_for(text: str) -> int:
-    """A small, deterministic per-clip pitch offset (+/-4) so the whole word
-    list doesn't sound like it was stamped out by one identical template -
-    real voices don't hit every word at exactly the same pitch either."""
-    h = int(hashlib.md5(text.encode()).hexdigest(), 16)
-    return PITCH + (h % 9) - 4
-
-
 def speak_to_mp3(text: str, out_path_no_ext: str):
     wav_path = out_path_no_ext + ".wav"
     mp3_path = out_path_no_ext + ".mp3"
     subprocess.run(
-        ["espeak-ng", "-v", VOICE, "-s", str(SPEED), "-p", str(_pitch_for(text)), "-w", wav_path, text],
+        ["espeak-ng", "-v", VOICE, "-s", str(SPEED), "-p", str(PITCH), "-w", wav_path, text],
         check=True, capture_output=True,
     )
     subprocess.run(
-        [
-            "ffmpeg", "-y", "-i", wav_path,
-            "-af",
-            # Trim the mbrola engine's low sample-rate hiss, warm the tone up
-            # slightly (a touch more low-mid, a little less top-end edge),
-            # and even out loudness across every clip.
-            "highpass=f=90,lowpass=f=9500,bass=g=3:f=250:w=0.6,treble=g=-2:f=6500,"
-            "loudnorm=I=-16:TP=-1.5:LRA=11",
-            "-ar", "44100", "-codec:a", "libmp3lame", "-qscale:a", "3", mp3_path,
-        ],
+        ["ffmpeg", "-y", "-i", wav_path, "-ar", "44100", "-codec:a", "libmp3lame", "-qscale:a", "3", mp3_path],
         check=True, capture_output=True,
     )
     os.remove(wav_path)
