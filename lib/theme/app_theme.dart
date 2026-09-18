@@ -26,9 +26,10 @@ class AppColors {
   static const categoryVehicles = Color(0xFF3B78C8);
   static const categoryShapes = Color(0xFF7ED956);
 
-  // Home screen's two mode cards (distinct from the category palette above).
-  static const modeLearnGreen = Color(0xFF3E9121);
-  static const modeGuessCoral = Color(0xFFFC543D);
+  // Home screen's two mode cards - picked to exactly match a category
+  // card's color: Learn = Vehicles' blue, Guess = Fruits' red.
+  static const modeLearnBlue = categoryVehicles;
+  static const modeGuessRed = categoryFruits;
 
   // mascot badge gradient
   static const mascotGradientTop = Color(0xFFFF8766);
