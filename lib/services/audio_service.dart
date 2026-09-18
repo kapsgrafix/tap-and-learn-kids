@@ -17,6 +17,7 @@ class AudioService {
   bool get muted => _muted;
 
   bool _musicStarted = false;
+  bool _pausedForBackground = false;
 
   // Loud enough to actually be heard as a music bed, but still well under
   // the narration/sfx channels so it never competes with them.
@@ -46,6 +47,32 @@ class AudioService {
     } catch (_) {
       // A missing/late-loading music asset should never block the app.
     }
+  }
+
+  /// Called when the app leaves the foreground (backgrounded/minimized) —
+  /// pauses the music bed so nothing keeps playing while the child isn't
+  /// looking at the app.
+  Future<void> pauseForBackground() async {
+    if (!_musicStarted) return;
+    _pausedForBackground = true;
+    try {
+      await _musicPlayer.pause();
+    } catch (_) {}
+  }
+
+  /// Called when the app returns to the foreground. `AudioPlayer.resume()`
+  /// isn't always reliable after a player has sat paused in the background
+  /// for a while, so rather than risk silently staying paused, this starts
+  /// the loop fresh from the asset — imperceptible for a looping music bed.
+  Future<void> resumeFromBackground() async {
+    if (!_pausedForBackground) return;
+    _pausedForBackground = false;
+    if (_muted || !_musicStarted) return;
+    try {
+      await _musicPlayer.setReleaseMode(ReleaseMode.loop);
+      await _musicPlayer.setVolume(_musicVolume);
+      await _musicPlayer.play(AssetSource('audio/music/bg_loop.mp3'));
+    } catch (_) {}
   }
 
   Future<void> playWord(String assetPath) async {

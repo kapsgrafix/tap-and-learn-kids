@@ -13,16 +13,52 @@ void main() {
   ]).then((_) => runApp(const TapAndLearnApp()));
 }
 
-class TapAndLearnApp extends StatelessWidget {
+class TapAndLearnApp extends StatefulWidget {
   const TapAndLearnApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<TapAndLearnApp> createState() => _TapAndLearnAppState();
+}
+
+class _TapAndLearnAppState extends State<TapAndLearnApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // A soft, low-volume music bed for as long as the app is open, so it's
     // already playing under the very first screen the child sees.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AudioService.instance.startBackgroundMusic();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Pause the music the moment the app is actually backgrounded/minimized
+    // (not on merely transient states like a system dialog), and pick it
+    // back up the moment the child returns to the app.
+    switch (state) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+        AudioService.instance.pauseForBackground();
+        break;
+      case AppLifecycleState.resumed:
+        AudioService.instance.resumeFromBackground();
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Nimble Kids',
       debugShowCheckedModeBanner: false,

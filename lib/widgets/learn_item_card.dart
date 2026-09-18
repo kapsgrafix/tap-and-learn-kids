@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/game_item.dart';
 import '../theme/app_theme.dart';
 
-/// One tile in the Learn screen's 3-column word grid: the illustration on
-/// top, the word itself on a colored strip below (unlike the quiz's
-/// OptionCard, this mode is about learning the word, so the label is
-/// always shown). Tapping plays the word's narration; [isActive] highlights
-/// whichever card is currently sounding out.
+/// One tile in the Learn screen's 3-column word grid: just the illustration
+/// while idle. Tapping plays the word's narration and, while it sounds out
+/// ([isActive]), the whole card fills with the category color and shows the
+/// word with a speaker icon on top of it.
 class LearnItemCard extends StatelessWidget {
   final GameItem item;
   final Color categoryColor;
@@ -48,37 +47,42 @@ class LearnItemCard extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Image.asset(item.imageAsset, fit: BoxFit.contain),
-                ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Image.asset(item.imageAsset, fit: BoxFit.contain),
               ),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                color: categoryColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.volume_up_rounded, size: 12, color: Colors.white),
-                    const SizedBox(width: 3),
-                    Flexible(
-                      child: Text(
+              // While the word is sounding out, the whole card becomes a
+              // solid color-fill with the word (and a speaker icon) on top —
+              // a big, unmistakable "this one!" moment for a young child.
+              AnimatedOpacity(
+                opacity: isActive ? 1 : 0,
+                duration: const Duration(milliseconds: 180),
+                child: Container(
+                  color: categoryColor,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.volume_up_rounded, size: 26, color: Colors.white),
+                      const SizedBox(height: 4),
+                      Text(
                         item.label,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontFamily: AppTheme.headingFontFamily,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
                           color: Colors.white,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

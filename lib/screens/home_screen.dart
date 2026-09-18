@@ -4,6 +4,7 @@ import '../services/image_precache_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/mascot_widget.dart';
 import '../widgets/mode_card.dart';
+import '../widgets/privacy_policy_button.dart';
 import '../widgets/sound_toggle_button.dart';
 import 'category_select_screen.dart';
 
@@ -85,6 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             // Figma's BottomBar sound toggle: bottom-right on every screen.
             const SoundToggleButton(),
+            // Privacy policy: bottom-left, Home screen only.
+            const PrivacyPolicyButton(),
           ],
         ),
       ),

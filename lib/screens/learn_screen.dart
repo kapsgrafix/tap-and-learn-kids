@@ -42,7 +42,10 @@ class _LearnScreenState extends State<LearnScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final items = widget.category.items;
+    // Keep the grid to a single comfortable screenful — a big category
+    // could otherwise scroll on for pages, which is hard for a young child
+    // to navigate.
+    final items = widget.category.items.take(12).toList();
 
     return Scaffold(
       backgroundColor: AppColors.bgYellow,
@@ -61,6 +64,11 @@ class _LearnScreenState extends State<LearnScreen> {
                   const SizedBox(height: 20),
                   Expanded(
                     child: GridView.builder(
+                      // The tapped card briefly scales up (see LearnItemCard);
+                      // without this, GridView's default hard-edge clip crops
+                      // that bounce right at the grid's own bounds, which is
+                      // most visible on the corner/edge cards.
+                      clipBehavior: Clip.none,
                       itemCount: items.length,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
