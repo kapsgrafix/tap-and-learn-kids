@@ -13,6 +13,7 @@ class AppHeader extends StatelessWidget {
   const AppHeader({super.key, required this.title, required this.onBack});
 
   static const double _slotSize = 26;
+  static const double _tapTargetSize = 48;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +24,21 @@ class AppHeader extends StatelessWidget {
           SizedBox(
             width: _slotSize,
             height: _slotSize,
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              iconSize: 24,
-              icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
-              onPressed: onBack,
+            // The visible icon stays pinned to its small Figma-accurate
+            // slot (so the title still lands dead-center), but the actual
+            // tap target overflows that slot up to Material's full 48x48
+            // touch size - the icon was easy to visually miss-tap before.
+            child: OverflowBox(
+              minWidth: _tapTargetSize,
+              maxWidth: _tapTargetSize,
+              minHeight: _tapTargetSize,
+              maxHeight: _tapTargetSize,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                iconSize: 24,
+                icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
+                onPressed: onBack,
+              ),
             ),
           ),
           Expanded(
