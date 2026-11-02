@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import '../models/game_mode.dart';
 import '../services/image_precache_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/home_game_tile.dart';
 import '../widgets/mascot_widget.dart';
-import '../widgets/mode_card.dart';
 import '../widgets/privacy_policy_button.dart';
 import '../widgets/sound_toggle_button.dart';
 import 'category_select_screen.dart';
+import 'tracing_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,6 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _openDraw() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const TracingHomeScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,13 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Center(
+            SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // The "Nimble Kids" wordmark is baked into this logo
                   // artwork itself, so there's no separate title text here.
-                  const MascotWidget(size: 260),
+                  const MascotWidget(size: 160),
                   const Text(
                     'Tap, Learn & Play!',
                     textAlign: TextAlign.center,
@@ -60,27 +67,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: AppColors.brandCoral,
                     ),
                   ),
-                  const SizedBox(height: 56),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ModeCard(
-                        title: 'Learn',
-                        subtitle: 'the word',
-                        iconAsset: 'assets/images/home/learn_icon.webp',
-                        color: AppColors.modeLearnBlue,
-                        onTap: () => _openCategorySelect(GameMode.learn),
-                      ),
-                      const SizedBox(width: 16),
-                      ModeCard(
-                        title: 'Guess',
-                        subtitle: 'the word',
-                        iconAsset: 'assets/images/home/guess_icon.webp',
-                        color: AppColors.modeGuessRed,
-                        onTap: () => _openCategorySelect(GameMode.guess),
-                      ),
-                    ],
+                  const SizedBox(height: 28),
+                  HomeGameTile(
+                    icon: Icons.quiz_rounded,
+                    title: 'Guess',
+                    subtitle: 'Guess the word',
+                    color: AppColors.modeGuessRed,
+                    onTap: () => _openCategorySelect(GameMode.guess),
                   ),
+                  const SizedBox(height: 14),
+                  HomeGameTile(
+                    icon: Icons.brush_rounded,
+                    title: 'Draw',
+                    subtitle: 'Trace shapes & numbers',
+                    color: AppColors.modeDrawPurple,
+                    onTap: _openDraw,
+                  ),
+                  const SizedBox(height: 14),
+                  const HomeGameTile(
+                    icon: Icons.extension_rounded,
+                    title: 'Puzzle',
+                    subtitle: 'Put it together',
+                    color: AppColors.modePuzzleMuted,
+                    comingSoon: true,
+                  ),
+                  // Leaves clear room above the bottom sound-toggle button.
+                  const SizedBox(height: 56),
                 ],
               ),
             ),

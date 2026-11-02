@@ -26,10 +26,29 @@ class AppColors {
   static const categoryVehicles = Color(0xFF3B78C8);
   static const categoryShapes = Color(0xFF7ED956);
 
-  // Home screen's two mode cards - picked to exactly match a category
-  // card's color: Learn = Vehicles' blue, Guess = Fruits' red.
+  // Home screen's mode cards - picked to exactly match a category card's
+  // color where one exists: Learn = Vehicles' blue, Guess = Fruits' red.
   static const modeLearnBlue = categoryVehicles;
   static const modeGuessRed = categoryFruits;
+
+  // Draw (the tracing game) gets its own accent - a soft violet-blue
+  // that doesn't collide with any existing category color, matching the
+  // purple used throughout the standalone "Tiny Tracers" prototype this
+  // was ported from.
+  static const modeDrawPurple = Color(0xFF8B7BFF);
+
+  // Puzzle has no game behind it yet - a quiet, deliberately muted tone
+  // for a "Coming Soon" card so it doesn't compete with the two live ones.
+  static const modePuzzleMuted = Color(0xFFB7AFC9);
+
+  // Tracing-board tokens, matching the prototype's canvas palette: the
+  // lane the child should stay inside, the dotted guide (unlit/lit), the
+  // drawn stroke itself, and the start marker/demo-trail accent.
+  static const traceTrack = Color(0xFFEDF0FF);
+  static const traceDot = Color(0xFF8A97CC);
+  static const traceHit = Color(0xFFFFC83D);
+  static const traceStroke = modeDrawPurple;
+  static const traceStart = Color(0xFFFF6B57);
 
   // mascot badge gradient
   static const mascotGradientTop = Color(0xFFFF8766);
